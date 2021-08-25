@@ -33,11 +33,11 @@ internal class ExpBuilderTest {
 
     @Test
     fun testComplex() {
-        val testStr = "42+cos(45-(56*4))/log(-21)*(-3+8)"
+        val testStr = "42+cos(45-(56*pi*4))/log(-21)*(-3+8m)"
         val expStr = testStr
 
         addString(testStr)
-
+        println(exp.tokens)
         assertEquals(expStr, exp.expString)
     }
 

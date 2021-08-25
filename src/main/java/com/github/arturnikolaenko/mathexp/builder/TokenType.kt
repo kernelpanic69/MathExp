@@ -7,5 +7,7 @@ enum class TokenType {
     FUNCTION_NAME,
     UNIT,
     OPERATOR,
-    SIGN
+    SIGN,
+    UNKNOWN,
+    CONSTANT,
 }

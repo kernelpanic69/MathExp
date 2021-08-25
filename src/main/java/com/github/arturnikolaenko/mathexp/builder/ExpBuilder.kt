@@ -25,7 +25,7 @@ internal class ExpBuilder {
             State.START -> when {
                 ch.isDigit() -> switchState(ch, State.NUMBER, TokenType.NUMBER)
 
-                ch.isLetter() -> switchState(ch, State.FUNCTION_NAME, TokenType.FUNCTION_NAME)
+                ch.isLetter() -> switchState(ch, State.STRING_LITERAL, TokenType.UNKNOWN)
 
                 ch.isSign() -> switchState(ch, State.SIGN, TokenType.SIGN)
 
@@ -37,7 +37,7 @@ internal class ExpBuilder {
             State.SIGN -> when {
                 ch.isDigit() -> switchState(ch, State.NUMBER, TokenType.NUMBER)
 
-                ch.isLetter() -> switchState(ch, State.FUNCTION_NAME, TokenType.FUNCTION_NAME)
+                ch.isLetter() -> switchState(ch, State.STRING_LITERAL, TokenType.UNKNOWN)
 
                 ch.isOpenBracket() -> switchState(ch, State.OPEN_BRACKET, TokenType.OPEN_BRACKET)
 
@@ -49,7 +49,7 @@ internal class ExpBuilder {
 
                 ch.isDecimalSeparator() -> switchState(ch, State.DECIMAL)
 
-                ch.isLetter() -> switchState(ch, State.UNIT, TokenType.UNIT)
+                ch.isLetter() -> switchState(ch, State.STRING_LITERAL, TokenType.UNKNOWN)
 
                 ch.isOperator() -> switchState(ch, State.OPERATOR, TokenType.OPERATOR)
 
@@ -69,7 +69,7 @@ internal class ExpBuilder {
 
                 ch.isOperator() -> switchState(ch, State.OPERATOR, TokenType.OPERATOR)
 
-                ch.isLetter() -> switchState(ch, State.UNIT, TokenType.UNIT)
+                ch.isLetter() -> switchState(ch, State.STRING_LITERAL, TokenType.UNKNOWN)
 
                 ch.isCloseBracket() -> switchState(ch, State.CLOSE_BRACKET, TokenType.CLOSE_BRACKET)
 
@@ -89,7 +89,7 @@ internal class ExpBuilder {
             State.OPERATOR -> when {
                 ch.isDigit() -> switchState(ch, State.NUMBER, TokenType.NUMBER)
 
-                ch.isLetter() -> switchState(ch, State.FUNCTION_NAME, TokenType.FUNCTION_NAME)
+                ch.isLetter() -> switchState(ch, State.STRING_LITERAL, TokenType.UNKNOWN)
 
 //                ch.isSign() -> switchState(ch, State.SIGN, TokenType.SIGN)
 
@@ -101,7 +101,7 @@ internal class ExpBuilder {
             State.OPEN_BRACKET -> when {
                 ch.isDigit() -> switchState(ch, State.NUMBER, TokenType.NUMBER)
 
-                ch.isLetter() -> switchState(ch, State.FUNCTION_NAME, TokenType.FUNCTION_NAME)
+                ch.isLetter() -> switchState(ch, State.STRING_LITERAL, TokenType.UNKNOWN)
 
                 ch.isSign() -> switchState(ch, State.SIGN, TokenType.SIGN)
 
@@ -118,9 +118,9 @@ internal class ExpBuilder {
                 else -> return false
             }
 
-            State.FUNCTION_NAME -> when {
+            State.STRING_LITERAL -> when {
                 ch.isLetter() -> token.update(ch)
-
+                ch.isOperator() -> switchState(ch, State.OPERATOR, TokenType.OPERATOR)
                 ch.isOpenBracket() -> switchState(ch, State.OPEN_BRACKET, TokenType.OPEN_BRACKET)
 
                 else -> return false
