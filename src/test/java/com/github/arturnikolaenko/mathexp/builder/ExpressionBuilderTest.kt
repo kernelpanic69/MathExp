@@ -4,12 +4,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
-internal class ExpBuilderTest {
-    private var exp = ExpBuilder()
+internal class ExpressionBuilderTest {
+    private var exp = ExpressionBuilder()
 
     @BeforeEach
     fun createBuilder() {
-        exp = ExpBuilder()
+        exp = ExpressionBuilder()
     }
 
     @Test
@@ -37,6 +37,23 @@ internal class ExpBuilderTest {
         val expStr = testStr
 
         addString(testStr)
+        assertEquals(expStr, exp.expString)
+    }
+
+    @Test
+    fun testDrop() {
+        val testStr = "45+12-cos(21)"
+        val expStr = "45+12-8"
+
+        addString(testStr)
+
+        for (i in 0..7)
+            exp.dropLast()
+
+        exp.add('-')
+        exp.add('8')
+        exp.add(')')
+
         assertEquals(expStr, exp.expString)
     }
 

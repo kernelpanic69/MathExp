@@ -1,4 +1,4 @@
-package com.github.arturnikolaenko.mathexp
+package com.github.arturnikolaenko.mathexp.util
 
 private val operators = arrayOf('-', '+', '*', '/', '^')
 

@@ -1,6 +1,6 @@
 package com.github.arturnikolaenko.mathexp.builder
 
-enum class State(val valid: Boolean = false) {
+internal enum class State(val valid: Boolean = false) {
     START,
     NUMBER(true),
     STRING_LITERAL,

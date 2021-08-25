@@ -1,6 +1,6 @@
 package com.github.arturnikolaenko.mathexp
 
-import com.github.arturnikolaenko.mathexp.builder.ExpBuilder
+import com.github.arturnikolaenko.mathexp.builder.ExpressionBuilder
 import kotlin.properties.Delegates
 
 class MathExp {
@@ -9,7 +9,7 @@ class MathExp {
         displayListener(old, new)
     }
 
-    private val parser = ExpBuilder()
+    private val parser = ExpressionBuilder()
 
 
     fun addCharacter(ch: Char) {

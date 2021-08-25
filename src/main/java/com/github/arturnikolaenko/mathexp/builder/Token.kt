@@ -6,7 +6,7 @@ class Token(var type: TokenType) {
     val value: String
         get() = buildValue.toString()
 
-    private val buildValue = StringBuilder()
+    private var buildValue = StringBuilder()
 
     internal fun update(ch: Char) {
         buildValue.append(ch)
@@ -16,10 +16,12 @@ class Token(var type: TokenType) {
         return "{'$value', '$type'}"
     }
 
-    val isEmpty: Boolean
-    get() = buildValue.isEmpty()
+    internal val isEmpty: Boolean
+        get() = buildValue.isEmpty()
 
-    fun dropLast() {
-        buildValue.dropLast(1)
+    internal fun dropLast() {
+        if (!isEmpty) {
+            buildValue = buildValue.deleteAt(buildValue.lastIndex)
+        }
     }
 }
