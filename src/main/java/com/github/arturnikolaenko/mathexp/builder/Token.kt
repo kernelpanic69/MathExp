@@ -15,4 +15,11 @@ class Token(var type: TokenType) {
     override fun toString(): String {
         return "{'$value', '$type'}"
     }
+
+    val isEmpty: Boolean
+    get() = buildValue.isEmpty()
+
+    fun dropLast() {
+        buildValue.dropLast(1)
+    }
 }

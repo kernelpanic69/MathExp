@@ -3,8 +3,7 @@ package com.github.arturnikolaenko.mathexp.builder
 import com.github.arturnikolaenko.mathexp.*
 
 internal class ExpBuilder {
-    val expString: String
-        get() = _tokens.joinToString("") { it.value }
+    var expString = ""
     val tokens: List<Token>
         get() = _tokens.toList()
 
@@ -20,7 +19,9 @@ internal class ExpBuilder {
     private val constanta = listOf("pi", "e")
     private val units = listOf("m", "km", "mm", "deg", "rad")
 
-    fun process(ch: Char): Boolean {
+    private val characterIndex = mutableListOf<Pair<Char, State>>()
+
+    fun add(ch: Char): Boolean {
         if (ch.isCloseBracket() && numBrackets <= 0) {
             return false
         }
@@ -49,7 +50,7 @@ internal class ExpBuilder {
             }
 
             State.NUMBER -> when {
-                ch.isDigit() -> token.update(ch)
+                ch.isDigit() -> switchState(ch)
 
                 ch.isDecimalSeparator() -> switchState(ch, State.DECIMAL)
 
@@ -69,7 +70,7 @@ internal class ExpBuilder {
             }
 
             State.DECIMAL_BODY -> when {
-                ch.isDigit() -> token.update(ch)
+                ch.isDigit() -> switchState(ch)
 
                 ch.isOperator() -> switchState(ch, State.OPERATOR, TokenType.OPERATOR)
 
@@ -81,7 +82,7 @@ internal class ExpBuilder {
             }
 
             State.UNIT -> when {
-                ch.isLetter() -> token.update(ch)
+                ch.isLetter() -> switchState(ch)
 
                 ch.isOperator() -> switchState(ch, State.OPERATOR, TokenType.OPERATOR)
 
@@ -123,7 +124,7 @@ internal class ExpBuilder {
             }
 
             State.STRING_LITERAL -> when {
-                ch.isLetter() -> token.update(ch)
+                ch.isLetter() -> switchState(ch)
                 ch.isOperator() -> switchState(ch, State.OPERATOR, TokenType.OPERATOR)
                 ch.isOpenBracket() -> switchState(ch, State.OPEN_BRACKET, TokenType.OPEN_BRACKET)
                 ch.isCloseBracket() -> switchState(ch, State.CLOSE_BRACKET, TokenType.CLOSE_BRACKET)
@@ -131,6 +132,23 @@ internal class ExpBuilder {
                 else -> return false
             }
         }
+
+        return true
+    }
+
+    fun dropLast(): Boolean {
+        if (characterIndex.isEmpty()) {
+            return false
+        }
+
+        token.dropLast()
+
+        if (token.isEmpty) {
+            _tokens.dropLast(1)
+        }
+
+        characterIndex.dropLast(1)
+        state = characterIndex.last().second
 
         return true
     }
@@ -145,8 +163,11 @@ internal class ExpBuilder {
         }
 
         token.update(ch)
+        expString += ch
 
         if (newState != null) {
+            characterIndex += ch to newState
+
             if (newState == State.OPEN_BRACKET) {
                 addBrackets()
             } else if (newState == State.CLOSE_BRACKET) {
@@ -154,6 +175,8 @@ internal class ExpBuilder {
             }
 
             state = newState
+        } else {
+            characterIndex += ch to state
         }
     }
 

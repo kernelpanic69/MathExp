@@ -13,7 +13,7 @@ class MathExp {
 
 
     fun addCharacter(ch: Char) {
-        parser.process(ch)
+        parser.add(ch)
         displayString = parser.expString
     }
 }

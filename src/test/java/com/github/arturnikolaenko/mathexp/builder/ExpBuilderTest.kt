@@ -37,13 +37,12 @@ internal class ExpBuilderTest {
         val expStr = testStr
 
         addString(testStr)
-        println(exp.tokens)
         assertEquals(expStr, exp.expString)
     }
 
     private fun addString(str: String) {
         for (ch in str) {
-            exp.process(ch)
+            exp.add(ch)
         }
     }
 }
