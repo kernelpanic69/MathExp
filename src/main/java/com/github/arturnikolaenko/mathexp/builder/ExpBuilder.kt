@@ -4,17 +4,17 @@ import com.github.arturnikolaenko.mathexp.*
 
 internal class ExpBuilder {
     val expString: String
-        get() = tokens.joinToString("") { it.value }
-    val publicTokens: List<Token>
-        get() = tokens.toList()
+        get() = _tokens.joinToString("") { it.value }
+    val tokens: List<Token>
+        get() = _tokens.toList()
 
     private var numBrackets = 0
     private var state: State = State.START
 
     private val token: Token
-        get() = tokens.last()
+        get() = _tokens.last()
 
-    private val tokens = mutableListOf<Token>()
+    private val _tokens = mutableListOf<Token>()
 
     fun process(ch: Char): Boolean {
         if (ch.isCloseBracket() && numBrackets <= 0) {
@@ -153,7 +153,7 @@ internal class ExpBuilder {
     }
 
     private fun syncToken(type: TokenType) {
-        tokens.add(Token(type))
+        _tokens.add(Token(type))
     }
 
     private fun addBrackets() {
