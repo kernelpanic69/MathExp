@@ -16,6 +16,10 @@ internal class ExpBuilder {
 
     private val _tokens = mutableListOf<Token>()
 
+    private val functions = listOf("cos", "sin", "ln", "exp")
+    private val constanta = listOf("pi", "e")
+    private val units = listOf("m", "km", "mm", "deg", "rad")
+
     fun process(ch: Char): Boolean {
         if (ch.isCloseBracket() && numBrackets <= 0) {
             return false
@@ -122,6 +126,7 @@ internal class ExpBuilder {
                 ch.isLetter() -> token.update(ch)
                 ch.isOperator() -> switchState(ch, State.OPERATOR, TokenType.OPERATOR)
                 ch.isOpenBracket() -> switchState(ch, State.OPEN_BRACKET, TokenType.OPEN_BRACKET)
+                ch.isCloseBracket() -> switchState(ch, State.CLOSE_BRACKET, TokenType.CLOSE_BRACKET)
 
                 else -> return false
             }
@@ -153,6 +158,15 @@ internal class ExpBuilder {
     }
 
     private fun syncToken(type: TokenType) {
+        if (_tokens.isNotEmpty() && token.type == TokenType.UNKNOWN) {
+            token.type = when (token.value) {
+                in functions -> TokenType.FUNCTION
+                in constanta -> TokenType.CONSTANT
+                in units -> TokenType.UNIT
+                else -> TokenType.UNKNOWN
+            }
+        }
+
         _tokens.add(Token(type))
     }
 

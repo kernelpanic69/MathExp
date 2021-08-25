@@ -4,7 +4,7 @@ enum class TokenType {
     NUMBER,
     OPEN_BRACKET,
     CLOSE_BRACKET,
-    FUNCTION_NAME,
+    FUNCTION,
     UNIT,
     OPERATOR,
     SIGN,

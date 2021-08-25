@@ -2,7 +2,7 @@ package com.github.arturnikolaenko.mathexp.builder
 
 import java.lang.StringBuilder
 
-class Token(val type: TokenType) {
+class Token(var type: TokenType) {
     val value: String
         get() = buildValue.toString()
 
