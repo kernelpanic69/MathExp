@@ -1,14 +1,14 @@
 package com.github.arturnikolaenko.mathexp.builder
 
-internal enum class State(val valid: Boolean = false) {
+internal enum class State {
     START,
-    NUMBER(true),
+    NUMBER,
     STRING_LITERAL,
     SIGN,
     OPEN_BRACKET,
     DECIMAL,
     UNIT,
     OPERATOR,
-    DECIMAL_BODY(true),
-    CLOSE_BRACKET(true)
+    DECIMAL_BODY,
+    CLOSE_BRACKET
 }

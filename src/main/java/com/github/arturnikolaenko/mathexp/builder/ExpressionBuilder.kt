@@ -15,7 +15,7 @@ import com.github.arturnikolaenko.mathexp.util.*
  *
  *      println(builder.expString)
  */
-internal class ExpressionBuilder {
+class ExpressionBuilder {
     /**
      * Expression string.
      */
@@ -34,11 +34,7 @@ internal class ExpressionBuilder {
     private val token: Token
         get() = _tokens.last()
 
-    private val _tokens = mutableListOf<Token>()
-
-    private val functions = listOf("cos", "sin", "ln", "exp")
-    private val constanta = listOf("pi", "e")
-    private val units = listOf("m", "km", "mm", "deg", "rad")
+    private val _tokens = ObservableListWrapper(mutableListOf())
 
     private val characterIndex = mutableListOf<Pair<Char, State>>()
 
@@ -73,7 +69,7 @@ internal class ExpressionBuilder {
             State.NUMBER -> when {
                 ch.isDigit() -> update(ch)
                 ch.isDecimalSeparator() -> update(ch, State.DECIMAL)
-                ch.isLetter() -> update(ch, State.STRING_LITERAL, TokenType.UNKNOWN)
+                ch.isLetter() -> update(ch, State.UNIT, TokenType.UNIT)
                 ch.isOperator() -> update(ch, State.OPERATOR, TokenType.OPERATOR)
                 ch.isCloseBracket() -> update(ch, State.CLOSE_BRACKET, TokenType.CLOSE_BRACKET)
                 else -> return false
@@ -95,7 +91,7 @@ internal class ExpressionBuilder {
             State.UNIT -> when {
                 ch.isLetter() -> update(ch)
                 ch.isOperator() -> update(ch, State.OPERATOR, TokenType.OPERATOR)
-                ch.isCloseBracket() -> update(ch, State.OPERATOR, TokenType.OPERATOR)
+                ch.isCloseBracket() -> update(ch, State.CLOSE_BRACKET, TokenType.CLOSE_BRACKET)
                 else -> return false
             }
 
@@ -154,7 +150,7 @@ internal class ExpressionBuilder {
         token.dropLast()
 
         if (token.isEmpty) {
-            _tokens.removeAt(_tokens.lastIndex)
+            _tokens.dropLast()
         }
 
         characterIndex.removeAt(characterIndex.lastIndex)
@@ -172,6 +168,16 @@ internal class ExpressionBuilder {
         characterIndex.clear()
         _tokens.clear()
         numBrackets = 0
+    }
+
+    fun addString(str: String): Boolean {
+        var valid = true
+
+        for (ch in str) {
+            valid = add(ch)
+        }
+
+        return valid
     }
 
     private fun update(
@@ -202,15 +208,6 @@ internal class ExpressionBuilder {
     }
 
     private fun syncToken(type: TokenType) {
-        if (_tokens.isNotEmpty() && token.type == TokenType.UNKNOWN) {
-            token.type = when (token.value) {
-                in functions -> TokenType.FUNCTION
-                in constanta -> TokenType.CONSTANT
-                in units -> TokenType.UNIT
-                else -> TokenType.UNKNOWN
-            }
-        }
-
         _tokens.add(Token(type))
     }
 

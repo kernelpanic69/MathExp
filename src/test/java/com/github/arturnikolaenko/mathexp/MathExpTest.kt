@@ -12,5 +12,7 @@ internal class MathExpTest {
         for (ch in expString) {
             exp.addCharacter(ch)
         }
+
+
     }
 }
